@@ -29,3 +29,18 @@ class Board {
     }
 }
 
+class Dice {
+    private int size;
+
+    public Dice(int size) {
+        this.size = size;
+    }
+
+    public int roll() {
+        int max = this.size;
+        int min = 1;
+        
+        return  rand() % (max - min + 1) + min;
+    }
+}
+
