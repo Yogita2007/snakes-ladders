@@ -4,10 +4,14 @@ using namespace std;
 
 class Board {
     private int size;
-    map<pair<int,int>, pair<int,int>> snakesAndLadders;
+    public map<pair<int,int>, pair<int,int>> snakesAndLadders;
 
     public Board(int size) {
         this.size = size;
+    }
+
+    public int getSize() {
+        return this.size;
     }
 
     public void addSnakeOrLadder(pair<int,int> start, pair<int,int> end) {
@@ -53,6 +57,48 @@ class Player {
 
     public pair<int,int> getPosition() {
         return this.position;
+    }
+
+    public void updatePosition(pair<int,int> newPos) {
+        this.position = newPos;
+    }
+}
+
+
+class Game {
+    private Board board;
+    private Dice dice;
+    private vector<Player> players;
+    private int currentPlayerIndex;
+
+    public Game(Board b=new Board(10), Dice d=new Dice(6), vector<Player> players={new Player(), new Player()}) {
+        this.board = board;
+        this.dice = dice;
+        this.players = players;
+        this.currentPlayerIndex = 0;
+    }
+
+    private pair<int,int> nextPosition(Player player, int move) {
+        pair<int,int> curPos = player.getPosition();
+        pair<int,int> finalPos = curPos;
+        finalPos.first = (finalPos.first + move)%this.board.getSize();
+        finalPos.second += (finalPos.first + move)/this.board.getSize();
+        if(this.board.snakesAndLadders.find(finalPos) != this.board.snakesAndLadders.end()) {
+            cout<<"Encountered snake/ladder at ("<<finalPos.first<<","<<finalPos.second<<")"<<endl;
+            finalPos = this.board.snakesAndLadders[finalPos];
+        }
+
+        return finalPos;            
+    }
+
+    public void nextMove() {
+        int val = this.dice.roll();
+        cout<<"Dice roll generated a "<<val<<endl;
+        pair<int,int> finalPos = this.nextPosition(this.players[currentPlayerIndex], val);
+        pair<int,int> initialPos = this.players[currentPlayerIndex].getPosition();
+        this.players[currentPlayerIndex].updatePosition(finalPos);
+        currentPlayerIndex = (currentPlayerIndex+1)%this.players.size();
+        cout<<"Player "<<currentPlayerIndex<<" moved from ("<<initialPos.first<<","<<initialPos.second<<") to ("<<finalPos.first<<","<<finalPos.second<<")"<<endl; 
     }
 }
 
