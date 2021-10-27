@@ -39,8 +39,20 @@ class Dice {
     public int roll() {
         int max = this.size;
         int min = 1;
-        
+
         return  rand() % (max - min + 1) + min;
+    }
+}
+
+class Player {
+    private pair<int,int> position;
+
+    public Player() {
+        this.position = make_pair(0,0);
+    }
+
+    public pair<int,int> getPosition() {
+        return this.position;
     }
 }
 
